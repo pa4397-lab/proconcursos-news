@@ -1,25 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import HomePage from "./pages/HomePage"
-import NewsPage from "./pages/NewsPage"
+import Home from "./pages/Home"
 
-function App() {
-
-  return (
-
-    <BrowserRouter>
-
-      <Routes>
-
-        <Route path="/" element={<HomePage />} />
-
-        <Route path="/noticia/:slug" element={<NewsPage />} />
-
-      </Routes>
-
-    </BrowserRouter>
-
-  )
-
+export default function App() {
+  return <Home/>
 }
-
-export default App
