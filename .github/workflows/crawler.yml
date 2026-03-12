@@ -23,5 +23,8 @@ jobs:
           pip install feedparser requests schedule python-slugify
 
       - name: Run crawler
-        run: |
-          python crawler.py
+          env:
+    SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+    SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+  run: |
+    python crawler.py
