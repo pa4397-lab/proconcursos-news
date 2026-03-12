@@ -1,38 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import { AuthProvider } from '@/contexts/AuthContext.jsx'
-import { getNews } from "./api"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import HomePage from "./pages/HomePage"
+import NewsPage from "./pages/NewsPage"
 
 function App() {
 
-  const [news, setNews] = useState([])
-
-  useEffect(() => {
-    async function loadNews() {
-      const data = await getNews()
-      setNews(data)
-    }
-
-    loadNews()
-  }, [])
-
   return (
-    <AuthProvider>
-      <div>
-        <h1>Últimas Notícias</h1>
 
-        {news.map((item) => (
-          <div key={item.id}>
-            <h3>{item.title}</h3>
+    <BrowserRouter>
 
-            <a href={item.url} target="_blank">
-              Ler notícia
-            </a>
-          </div>
-        ))}
+      <Routes>
 
-      </div>
-    </AuthProvider>
+        <Route path="/" element={<HomePage />} />
+
+        <Route path="/noticia/:slug" element={<NewsPage />} />
+
+      </Routes>
+
+    </BrowserRouter>
+
   )
+
 }
 
 export default App
