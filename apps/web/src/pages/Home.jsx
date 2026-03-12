@@ -4,23 +4,61 @@ import NewsCard from "../components/NewsCard"
 import HeroNews from "../components/HeroNews"
 import Sidebar from "../components/Sidebar"
 
+const SUPABASE_URL = "https://svfrmghbnyzkaorpnlqq.supabase.co"
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2ZnJtZ2hibnl6a2FvcnBubHFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxOTYzNDcsImV4cCI6MjA4ODc3MjM0N30.vGSYVkIkPrs3IlI4p9SnNZrguStafFLVFLU7qum9a3Y"
+
 export default function Home() {
 
   const [news, setNews] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
 
-    fetch("https://svfrmghbnyzkaorpnlqq.supabase.co/rest/v1/news?select=*")
-      .then(res => res.json())
-      .then(data => setNews(data))
-      .catch(err => console.log(err))
+    async function loadNews() {
+
+      try {
+
+        const response = await fetch(
+          `${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc`,
+          {
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          }
+        )
+
+        const data = await response.json()
+
+        setNews(data)
+
+      } catch (error) {
+
+        console.log("Erro ao carregar notícias:", error)
+
+      } finally {
+
+        setLoading(false)
+
+      }
+    }
+
+    loadNews()
 
   }, [])
 
+  if (loading) {
+    return (
+      <div className="p-10 text-center text-lg">
+        Carregando notícias...
+      </div>
+    )
+  }
+
   if (!news || news.length === 0) {
     return (
-      <div className="p-10 text-center">
-        Carregando notícias...
+      <div className="p-10 text-center text-lg">
+        Nenhuma notícia encontrada
       </div>
     )
   }
