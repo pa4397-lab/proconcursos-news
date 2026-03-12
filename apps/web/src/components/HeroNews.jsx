@@ -5,10 +5,12 @@ export default function HeroNews({ news }) {
   return (
     <div className="grid md:grid-cols-2 gap-6 mb-10">
 
-      <img
-        src={news.image}
-        className="rounded-xl object-cover w-full h-[320px]"
-      />
+      {news.image && (
+        <img
+          src={news.image}
+          className="rounded-xl object-cover w-full h-[320px]"
+        />
+      )}
 
       <div>
 
