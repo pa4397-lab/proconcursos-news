@@ -47,7 +47,7 @@ def get_image_from_page(url):
     return None
 
 
-def save_news(title, link, source):
+def save_news(title, link, source, published):
 
     slug = slugify(title)
 
@@ -61,7 +61,8 @@ def save_news(title, link, source):
         "summary": "Resumo automático",
         "analysis": "Análise automática",
         "probability": 50,
-        "image": image
+        "image": image,
+        "published_at": published
     }
 
     try:
@@ -88,9 +89,17 @@ def fetch_news():
             title = entry.title
             link = entry.link
 
+            published = None
+
+            if hasattr(entry, "published_parsed"):
+                published = time.strftime(
+                    "%Y-%m-%d %H:%M:%S",
+                    entry.published_parsed
+                )
+
             print("Nova notícia:", title)
 
-            save_news(title, link, feed)
+            save_news(title, link, feed, published)
 
 
 # roda a cada 10 minutos
