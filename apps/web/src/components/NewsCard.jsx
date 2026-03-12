@@ -3,10 +3,12 @@ export default function NewsCard({ news }) {
   return (
     <div className="border rounded-xl overflow-hidden hover:shadow-lg transition">
 
-      <img
-        src={news.image}
-        className="w-full h-[160px] object-cover"
-      />
+      {news.image && (
+        <img
+          src={news.image}
+          className="w-full h-[160px] object-cover"
+        />
+      )}
 
       <div className="p-4">
 
