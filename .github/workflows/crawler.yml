@@ -1,9 +1,9 @@
 name: Crawler News
 
 on:
-  schedule:
-    - cron: "*/30 * * * *"
   workflow_dispatch:
+  schedule:
+    - cron: "*/30 * * * *"   # roda a cada 30 minutos
 
 jobs:
   run-crawler:
@@ -20,11 +20,12 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install --upgrade pip
           pip install feedparser requests schedule python-slugify
 
       - name: Run crawler
-          env:
-    SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-    SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-  run: |
-    python crawler.py
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          python crawler.py
