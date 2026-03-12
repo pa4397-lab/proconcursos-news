@@ -1,0 +1,4 @@
+{
+  "buildCommand": "cd apps/web && npm install && npx vite build",
+  "outputDirectory": "apps/web/dist"
+}
