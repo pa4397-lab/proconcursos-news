@@ -22,6 +22,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install feedparser requests schedule python-slugify beautifulsoup4
+          pip install groq
 
       - name: Run crawler
         env:
