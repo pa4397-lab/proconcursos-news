@@ -1,25 +1,25 @@
-export default function HeroNews({ news }) {
+export default function HeroNews({news}){
 
-  if (!news) return null
+  if(!news) return null
 
-  const image = news.image || "https://placehold.co/800x500?text=ProConcursos"
+  const image = news.image || "https://placehold.co/900x500"
 
-  return (
+  return(
 
     <a href={`/noticia/${news.slug}`}>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-10">
+      <div className="grid md:grid-cols-2 gap-8 mb-10">
 
         <img
           src={image}
-          className="rounded-xl object-cover w-full h-[320px]"
+          className="w-full h-[360px] object-cover rounded-lg"
         />
 
         <div>
 
-          <h2 className="text-3xl font-bold mb-4">
+          <h1 className="text-4xl font-bold mb-4">
             {news.title}
-          </h2>
+          </h1>
 
           <p className="text-gray-600">
             {news.summary}
