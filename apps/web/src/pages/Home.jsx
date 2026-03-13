@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 const SUPABASE_URL = "https://svfrmghbnyzkaorpnlqq.supabase.co"
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2ZnJtZ2hibnl6a2FvcnBubHFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxOTYzNDcsImV4cCI6MjA4ODc3MjM0N30.vGSYVkIkPrs3IlI4p9SnNZrguStafFLVFLU7qum9a3Y"
+const SUPABASE_KEY = "COLE_SUA_ANON_KEY"
 
 export default function Home(){
 
@@ -69,8 +69,6 @@ export default function Home(){
 
       <div style={{maxWidth:1200,margin:"40px auto"}}>
 
-        {/* NOTÍCIA PRINCIPAL */}
-
         {main && (
 
           <div style={{
@@ -95,6 +93,14 @@ export default function Home(){
                 {main.summary}
               </p>
 
+              <a
+                href={main.url}
+                target="_blank"
+                style={{color:"blue"}}
+              >
+                Ler notícia original
+              </a>
+
             </div>
 
           </div>
@@ -106,8 +112,6 @@ export default function Home(){
           gridTemplateColumns:"2fr 1fr",
           gap:40
         }}>
-
-          {/* GRID */}
 
           <div style={{
             display:"grid",
@@ -137,6 +141,14 @@ export default function Home(){
                     {n.title}
                   </h3>
 
+                  <a
+                    href={n.url}
+                    target="_blank"
+                    style={{color:"blue"}}
+                  >
+                    Ver notícia
+                  </a>
+
                 </div>
 
               </div>
@@ -144,8 +156,6 @@ export default function Home(){
             ))}
 
           </div>
-
-          {/* SIDEBAR */}
 
           <div>
 
@@ -165,6 +175,18 @@ export default function Home(){
               >
 
                 {n.title}
+
+                <div>
+
+                  <a
+                    href={n.url}
+                    target="_blank"
+                    style={{color:"blue"}}
+                  >
+                    Ver notícia
+                  </a>
+
+                </div>
 
               </div>
 
