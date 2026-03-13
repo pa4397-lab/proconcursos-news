@@ -1,26 +1,32 @@
-export default function Sidebar({ news }) {
+export default function Sidebar({news}){
 
-  return (
+  return(
+
     <div>
 
-      <h3 className="font-bold text-lg mb-4">
+      <h3 className="text-lg font-bold mb-4">
         Últimas notícias
       </h3>
 
-      <div className="flex flex-col gap-4">
+      <div className="space-y-4">
 
-        {news.slice(0,5).map(n => (
+        {news.slice(0,6).map(n => (
 
-          <div key={n.id} className="text-sm border-b pb-2">
+          <a
+            key={n.id}
+            href={`/noticia/${n.slug}`}
+            className="block border-b pb-3 text-sm hover:text-green-700"
+          >
 
             {n.title}
 
-          </div>
+          </a>
 
         ))}
 
       </div>
 
     </div>
+
   )
 }
