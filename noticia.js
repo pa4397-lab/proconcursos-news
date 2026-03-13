@@ -3,7 +3,7 @@ const urlParams = new URLSearchParams(window.location.search)
 const slug = urlParams.get("slug")
 
 const SUPABASE_URL = "https://svfrmghbnyzkaorpnlqq.supabase.co"
-const SUPABASE_KEY = "SUA_ANON_KEY"
+const SUPABASE_KEY = "COLE_SUA_ANON_KEY"
 
 async function loadNews(){
 
