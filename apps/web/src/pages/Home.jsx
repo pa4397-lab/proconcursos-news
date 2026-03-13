@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 const SUPABASE_URL = "https://svfrmghbnyzkaorpnlqq.supabase.co"
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2ZnJtZ2hibnl6a2FvcnBubHFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxOTYzNDcsImV4cCI6MjA4ODc3MjM0N30.vGSYVkIkPrs3IlI4p9SnNZrguStafFLVFLU7qum9a3Y"
+const SUPABASE_KEY = "COLE_SUA_ANON_KEY"
 
 export default function Home(){
 
@@ -54,8 +54,6 @@ export default function Home(){
 
     <div style={{fontFamily:"Arial"}}>
 
-      {/* HEADER */}
-
       <div style={{
         borderBottom:"1px solid #ddd",
         padding:"20px 40px",
@@ -69,33 +67,35 @@ export default function Home(){
 
         {/* NOTÍCIA PRINCIPAL */}
 
-        <div style={{
-          display:"grid",
-          gridTemplateColumns:"1fr 1fr",
-          gap:30,
-          marginBottom:40
-        }}>
+        <a href={`./noticia.html?slug=${main.slug}`}>
 
-          <img
-            src={main.image || "https://placehold.co/600x400"}
-            style={{width:"100%",borderRadius:8}}
-          />
+          <div style={{
+            display:"grid",
+            gridTemplateColumns:"1fr 1fr",
+            gap:30,
+            marginBottom:40
+          }}>
 
-          <div>
+            <img
+              src={main.image || "https://placehold.co/600x400"}
+              style={{width:"100%",borderRadius:8}}
+            />
 
-            <h1 style={{fontSize:32}}>
-              {main.title}
-            </h1>
+            <div>
 
-            <p style={{marginTop:20,color:"#666"}}>
-              {main.summary}
-            </p>
+              <h1 style={{fontSize:32}}>
+                {main.title}
+              </h1>
+
+              <p style={{marginTop:20,color:"#666"}}>
+                {main.summary}
+              </p>
+
+            </div>
 
           </div>
 
-        </div>
-
-        {/* GRID DE NOTÍCIAS */}
+        </a>
 
         <div style={{
           display:"grid",
@@ -111,26 +111,34 @@ export default function Home(){
 
             {grid.map(n => (
 
-              <div key={n.id} style={{
-                border:"1px solid #eee",
-                borderRadius:8,
-                overflow:"hidden"
-              }}>
+              <a
+                key={n.id}
+                href={`./noticia.html?slug=${n.slug}`}
+                style={{textDecoration:"none",color:"black"}}
+              >
 
-                <img
-                  src={n.image || "https://placehold.co/400x250"}
-                  style={{width:"100%"}}
-                />
+                <div style={{
+                  border:"1px solid #eee",
+                  borderRadius:8,
+                  overflow:"hidden"
+                }}>
 
-                <div style={{padding:15}}>
+                  <img
+                    src={n.image || "https://placehold.co/400x250"}
+                    style={{width:"100%"}}
+                  />
 
-                  <h3 style={{fontSize:18}}>
-                    {n.title}
-                  </h3>
+                  <div style={{padding:15}}>
+
+                    <h3 style={{fontSize:18}}>
+                      {n.title}
+                    </h3>
+
+                  </div>
 
                 </div>
 
-              </div>
+              </a>
 
             ))}
 
@@ -146,15 +154,22 @@ export default function Home(){
 
             {sidebar.map(n => (
 
-              <div key={n.id} style={{
-                marginBottom:15,
-                borderBottom:"1px solid #eee",
-                paddingBottom:10
-              }}>
+              <a
+                key={n.id}
+                href={`./noticia.html?slug=${n.slug}`}
+                style={{
+                  display:"block",
+                  marginBottom:15,
+                  borderBottom:"1px solid #eee",
+                  paddingBottom:10,
+                  textDecoration:"none",
+                  color:"black"
+                }}
+              >
 
                 {n.title}
 
-              </div>
+              </a>
 
             ))}
 
