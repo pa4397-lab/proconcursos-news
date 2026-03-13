@@ -1,15 +1,16 @@
-export default function NewsCard({ news }) {
+export default function NewsCard({news}){
 
-  const image = news.image || "https://placehold.co/600x400?text=ProConcursos"
+  const image = news.image || "https://placehold.co/600x400"
 
-  return (
+  return(
+
     <a href={`/noticia/${news.slug}`}>
 
-      <div className="border rounded-xl overflow-hidden hover:shadow-lg transition">
+      <div className="hover:shadow-lg transition rounded-lg overflow-hidden border">
 
         <img
           src={image}
-          className="w-full h-[160px] object-cover"
+          className="w-full h-[180px] object-cover"
         />
 
         <div className="p-4">
@@ -27,5 +28,6 @@ export default function NewsCard({ news }) {
       </div>
 
     </a>
+
   )
 }
