@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import {BrowserRouter,Routes,Route} from "react-router-dom"
 
 import Home from "./pages/Home"
 import NewsPage from "./pages/NewsPage"
@@ -11,9 +11,8 @@ export default function App(){
 
       <Routes>
 
-        <Route path="/" element={<Home/>} />
-
-        <Route path="/noticia/:slug" element={<NewsPage/>} />
+        <Route path="/" element={<Home/>}/>
+        <Route path="/noticia/:slug" element={<NewsPage/>}/>
 
       </Routes>
 
