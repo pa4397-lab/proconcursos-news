@@ -56,18 +56,38 @@ export default function Home(){
 
   return(
 
-    <div style={{fontFamily:"Arial"}}>
+    <div style={{fontFamily:"Arial",background:"#f4f4f4"}}>
+
+      {/* HEADER */}
 
       <div style={{
-        borderBottom:"1px solid #ddd",
+        background:"#0b7a3b",
+        color:"white",
         padding:"20px 40px",
-        fontWeight:"bold",
-        fontSize:28
+        fontSize:28,
+        fontWeight:"bold"
       }}>
         ProConcursos
       </div>
 
-      <div style={{maxWidth:1200,margin:"40px auto"}}>
+      {/* MENU */}
+
+      <div style={{
+        background:"white",
+        borderBottom:"1px solid #ddd",
+        padding:"10px 40px"
+      }}>
+        Concursos • Editais • Polícia • Tribunais • Educação • Saúde
+      </div>
+
+      <div style={{
+        maxWidth:1200,
+        margin:"40px auto",
+        background:"white",
+        padding:30
+      }}>
+
+        {/* NOTÍCIA PRINCIPAL */}
 
         {main && (
 
@@ -85,20 +105,29 @@ export default function Home(){
 
             <div>
 
-              <h1 style={{fontSize:32}}>
+              <h1 style={{
+                fontSize:32,
+                marginBottom:20
+              }}>
                 {main.title}
               </h1>
 
-              <p style={{marginTop:20,color:"#666"}}>
+              <p style={{color:"#666",marginBottom:20}}>
                 {main.summary}
               </p>
 
               <a
                 href={main.url}
                 target="_blank"
-                style={{color:"blue"}}
+                style={{
+                  background:"#0b7a3b",
+                  color:"white",
+                  padding:"10px 15px",
+                  borderRadius:5,
+                  textDecoration:"none"
+                }}
               >
-                Ler notícia original
+                Ler notícia completa
               </a>
 
             </div>
@@ -107,11 +136,15 @@ export default function Home(){
 
         )}
 
+        {/* GRID + SIDEBAR */}
+
         <div style={{
           display:"grid",
           gridTemplateColumns:"2fr 1fr",
           gap:40
         }}>
+
+          {/* GRID */}
 
           <div style={{
             display:"grid",
@@ -137,16 +170,22 @@ export default function Home(){
 
                 <div style={{padding:15}}>
 
-                  <h3 style={{fontSize:18}}>
+                  <h3 style={{
+                    fontSize:18,
+                    marginBottom:10
+                  }}>
                     {n.title}
                   </h3>
 
                   <a
                     href={n.url}
                     target="_blank"
-                    style={{color:"blue"}}
+                    style={{
+                      color:"#0b7a3b",
+                      fontWeight:"bold"
+                    }}
                   >
-                    Ver notícia
+                    Ler notícia
                   </a>
 
                 </div>
@@ -157,9 +196,15 @@ export default function Home(){
 
           </div>
 
+          {/* SIDEBAR */}
+
           <div>
 
-            <h3 style={{marginBottom:20}}>
+            <h3 style={{
+              marginBottom:20,
+              borderBottom:"2px solid #0b7a3b",
+              paddingBottom:10
+            }}>
               Últimas notícias
             </h3>
 
@@ -174,19 +219,17 @@ export default function Home(){
                 }}
               >
 
-                {n.title}
-
-                <div>
-
-                  <a
-                    href={n.url}
-                    target="_blank"
-                    style={{color:"blue"}}
-                  >
-                    Ver notícia
-                  </a>
-
+                <div style={{marginBottom:5}}>
+                  {n.title}
                 </div>
+
+                <a
+                  href={n.url}
+                  target="_blank"
+                  style={{color:"#0b7a3b"}}
+                >
+                  Ler
+                </a>
 
               </div>
 
@@ -196,6 +239,18 @@ export default function Home(){
 
         </div>
 
+      </div>
+
+      {/* FOOTER */}
+
+      <div style={{
+        marginTop:40,
+        padding:30,
+        background:"#111",
+        color:"white",
+        textAlign:"center"
+      }}>
+        © {new Date().getFullYear()} ProConcursos
       </div>
 
     </div>
