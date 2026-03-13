@@ -7,7 +7,6 @@ export default function Home(){
 
   const [news,setNews] = useState([])
   const [loading,setLoading] = useState(true)
-  const [error,setError] = useState(null)
 
   useEffect(()=>{
 
@@ -25,24 +24,17 @@ export default function Home(){
           }
         )
 
-        if(!res.ok){
-          throw new Error("Erro na API")
-        }
-
         const data = await res.json()
 
         setNews(data || [])
 
       }catch(err){
 
-        console.error("Erro carregando notícias:",err)
-        setError(err.message)
-
-      }finally{
-
-        setLoading(false)
+        console.log(err)
 
       }
+
+      setLoading(false)
 
     }
 
@@ -51,32 +43,126 @@ export default function Home(){
   },[])
 
   if(loading){
-    return <div style={{padding:40}}>Carregando notícias...</div>
+    return <div style={{padding:40}}>Carregando...</div>
   }
 
-  if(error){
-    return <div style={{padding:40}}>Erro: {error}</div>
-  }
-
-  if(!news.length){
-    return <div style={{padding:40}}>Nenhuma notícia encontrada</div>
-  }
+  const main = news[0]
+  const grid = news.slice(1,9)
+  const sidebar = news.slice(9,20)
 
   return(
 
-    <div style={{padding:40}}>
+    <div style={{fontFamily:"Arial"}}>
 
-      <h1>ProConcursos News</h1>
+      {/* HEADER */}
 
-      {news.map(n=>(
-        <div key={n.id} style={{marginBottom:20}}>
+      <div style={{
+        borderBottom:"1px solid #ddd",
+        padding:"20px 40px",
+        fontWeight:"bold",
+        fontSize:28
+      }}>
+        ProConcursos
+      </div>
 
-          <h2>{n.title}</h2>
+      <div style={{maxWidth:1200,margin:"40px auto"}}>
 
-          <p>{n.summary}</p>
+        {/* NOTÍCIA PRINCIPAL */}
+
+        <div style={{
+          display:"grid",
+          gridTemplateColumns:"1fr 1fr",
+          gap:30,
+          marginBottom:40
+        }}>
+
+          <img
+            src={main.image || "https://placehold.co/600x400"}
+            style={{width:"100%",borderRadius:8}}
+          />
+
+          <div>
+
+            <h1 style={{fontSize:32}}>
+              {main.title}
+            </h1>
+
+            <p style={{marginTop:20,color:"#666"}}>
+              {main.summary}
+            </p>
+
+          </div>
 
         </div>
-      ))}
+
+        {/* GRID DE NOTÍCIAS */}
+
+        <div style={{
+          display:"grid",
+          gridTemplateColumns:"2fr 1fr",
+          gap:40
+        }}>
+
+          <div style={{
+            display:"grid",
+            gridTemplateColumns:"1fr 1fr",
+            gap:20
+          }}>
+
+            {grid.map(n => (
+
+              <div key={n.id} style={{
+                border:"1px solid #eee",
+                borderRadius:8,
+                overflow:"hidden"
+              }}>
+
+                <img
+                  src={n.image || "https://placehold.co/400x250"}
+                  style={{width:"100%"}}
+                />
+
+                <div style={{padding:15}}>
+
+                  <h3 style={{fontSize:18}}>
+                    {n.title}
+                  </h3>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+          {/* SIDEBAR */}
+
+          <div>
+
+            <h3 style={{marginBottom:20}}>
+              Últimas notícias
+            </h3>
+
+            {sidebar.map(n => (
+
+              <div key={n.id} style={{
+                marginBottom:15,
+                borderBottom:"1px solid #eee",
+                paddingBottom:10
+              }}>
+
+                {n.title}
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </div>
 
     </div>
 
