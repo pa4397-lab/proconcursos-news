@@ -46,6 +46,10 @@ export default function Home(){
     return <div style={{padding:40}}>Carregando...</div>
   }
 
+  if(!news.length){
+    return <div style={{padding:40}}>Nenhuma notícia encontrada</div>
+  }
+
   const main = news[0]
   const grid = news.slice(1,9)
   const sidebar = news.slice(9,20)
@@ -67,7 +71,7 @@ export default function Home(){
 
         {/* NOTÍCIA PRINCIPAL */}
 
-        <a href={`./noticia.html?slug=${main.slug}`}>
+        {main && (
 
           <div style={{
             display:"grid",
@@ -95,13 +99,15 @@ export default function Home(){
 
           </div>
 
-        </a>
+        )}
 
         <div style={{
           display:"grid",
           gridTemplateColumns:"2fr 1fr",
           gap:40
         }}>
+
+          {/* GRID */}
 
           <div style={{
             display:"grid",
@@ -111,34 +117,29 @@ export default function Home(){
 
             {grid.map(n => (
 
-              <a
+              <div
                 key={n.id}
-                href={`./noticia.html?slug=${n.slug}`}
-                style={{textDecoration:"none",color:"black"}}
-              >
-
-                <div style={{
+                style={{
                   border:"1px solid #eee",
                   borderRadius:8,
                   overflow:"hidden"
-                }}>
+                }}
+              >
 
-                  <img
-                    src={n.image || "https://placehold.co/400x250"}
-                    style={{width:"100%"}}
-                  />
+                <img
+                  src={n.image || "https://placehold.co/400x250"}
+                  style={{width:"100%"}}
+                />
 
-                  <div style={{padding:15}}>
+                <div style={{padding:15}}>
 
-                    <h3 style={{fontSize:18}}>
-                      {n.title}
-                    </h3>
-
-                  </div>
+                  <h3 style={{fontSize:18}}>
+                    {n.title}
+                  </h3>
 
                 </div>
 
-              </a>
+              </div>
 
             ))}
 
@@ -154,22 +155,18 @@ export default function Home(){
 
             {sidebar.map(n => (
 
-              <a
+              <div
                 key={n.id}
-                href={`./noticia.html?slug=${n.slug}`}
                 style={{
-                  display:"block",
                   marginBottom:15,
                   borderBottom:"1px solid #eee",
-                  paddingBottom:10,
-                  textDecoration:"none",
-                  color:"black"
+                  paddingBottom:10
                 }}
               >
 
                 {n.title}
 
-              </a>
+              </div>
 
             ))}
 
