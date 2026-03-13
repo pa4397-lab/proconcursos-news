@@ -2,7 +2,9 @@ export default function Header(){
 
   return(
 
-    <header className="border-b bg-white">
+    <header className="bg-white border-b">
+
+      {/* TOPO */}
 
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
 
@@ -11,19 +13,21 @@ export default function Header(){
         </div>
 
         <input
-          placeholder="Buscar notícias"
-          className="border rounded-lg px-4 py-2 w-[300px]"
+          placeholder="Buscar concursos ou notícias"
+          className="border px-4 py-2 rounded-lg w-[350px]"
         />
 
-        <div className="text-sm text-gray-600">
+        <div className="text-sm">
           Entrar
         </div>
 
       </div>
 
+      {/* MENU */}
+
       <div className="border-t">
 
-        <div className="max-w-7xl mx-auto px-4 py-2 flex gap-6 text-sm font-semibold">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex gap-6 text-sm font-semibold">
 
           <a href="/">INÍCIO</a>
           <a href="#">EDITAIS ABERTOS</a>
@@ -39,6 +43,5 @@ export default function Header(){
       </div>
 
     </header>
-
   )
 }
