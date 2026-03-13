@@ -1,46 +1,27 @@
 import { useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useEffect,useState } from "react"
 
-const SUPABASE_URL = "https://svfrmghbnyzkaorpnlqq.supabase.co"
-const SUPABASE_ANON_KEY = "SUA_KEY"
+const SUPABASE="https://svfrmghbnyzkaorpnlqq.supabase.co/rest/v1/news"
 
 export default function NewsPage(){
 
-  const { slug } = useParams()
+  const {slug}=useParams()
 
-  const [news,setNews] = useState(null)
+  const [news,setNews]=useState(null)
 
   useEffect(()=>{
 
-    async function load(){
-
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/news?slug=eq.${slug}&select=*`,
-        {
-          headers:{
-            apikey: SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`
-          }
-        }
-      )
-
-      const data = await res.json()
-
-      setNews(data[0])
-
-    }
-
-    load()
+    fetch(`${SUPABASE}?slug=eq.${slug}&select=*`)
+      .then(r=>r.json())
+      .then(d=>setNews(d[0]))
 
   },[slug])
 
-  if(!news){
-    return <div className="p-10">Carregando...</div>
-  }
+  if(!news) return <div className="p-10">Carregando...</div>
 
-  const image = news.image || "https://placehold.co/900x500?text=ProConcursos"
+  const image=news.image||"https://placehold.co/900x500"
 
-  return (
+  return(
 
     <div className="max-w-4xl mx-auto p-6">
 
@@ -48,10 +29,7 @@ export default function NewsPage(){
         {news.title}
       </h1>
 
-      <img
-        src={image}
-        className="w-full rounded-lg mb-6"
-      />
+      <img src={image} className="rounded-lg mb-6"/>
 
       <p className="text-gray-600 mb-4">
         {news.summary}
@@ -62,5 +40,6 @@ export default function NewsPage(){
       </div>
 
     </div>
+
   )
 }
