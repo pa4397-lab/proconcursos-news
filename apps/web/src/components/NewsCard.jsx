@@ -1,12 +1,12 @@
-export default function NewsCard({news}){
+export default function NewsCard({ news }) {
 
   const image = news.image || "https://placehold.co/600x400"
 
-  return(
+  return (
 
-    <a href={`/noticia/${news.slug}`}>
+    <a href={`/noticia.html?slug=${news.slug}`}>
 
-      <div className="hover:shadow-lg transition rounded-lg overflow-hidden border">
+      <div className="border rounded-lg overflow-hidden hover:shadow-lg">
 
         <img
           src={image}
@@ -30,4 +30,5 @@ export default function NewsCard({news}){
     </a>
 
   )
+
 }
