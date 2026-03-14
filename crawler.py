@@ -109,10 +109,15 @@ def get_image_from_page(url):
         if meta:
             return meta["content"]
 
+        img = soup.find("img")
+
+        if img and img.get("src"):
+            return img["src"]
+
     except:
         pass
 
-    return None
+    return "https://placehold.co/600x400?text=ProConcursos"
 
 
 # =========================
