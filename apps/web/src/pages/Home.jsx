@@ -56,15 +56,15 @@ export default function Home(){
 
   return(
 
-    <div style={{fontFamily:"Arial",background:"#f4f4f4"}}>
+    <div style={{fontFamily:"Arial",background:"#f2f2f2"}}>
 
-      {/* HEADER */}
+      {/* HEADER IGUAL SITE PRINCIPAL */}
 
       <div style={{
-        background:"#0b7a3b",
+        background:"#0f6d36",
         color:"white",
-        padding:"20px 40px",
-        fontSize:28,
+        padding:"18px 40px",
+        fontSize:26,
         fontWeight:"bold"
       }}>
         ProConcursos
@@ -75,10 +75,13 @@ export default function Home(){
       <div style={{
         background:"white",
         borderBottom:"1px solid #ddd",
-        padding:"10px 40px"
+        padding:"12px 40px",
+        fontSize:14
       }}>
         Concursos • Editais • Polícia • Tribunais • Educação • Saúde
       </div>
+
+      {/* CONTEÚDO */}
 
       <div style={{
         maxWidth:1200,
@@ -100,19 +103,22 @@ export default function Home(){
 
             <img
               src={main.image || "https://placehold.co/600x400"}
-              style={{width:"100%",borderRadius:8}}
+              style={{width:"100%",borderRadius:6}}
             />
 
             <div>
 
               <h1 style={{
-                fontSize:32,
+                fontSize:30,
                 marginBottom:20
               }}>
                 {main.title}
               </h1>
 
-              <p style={{color:"#666",marginBottom:20}}>
+              <p style={{
+                color:"#666",
+                marginBottom:20
+              }}>
                 {main.summary}
               </p>
 
@@ -120,14 +126,14 @@ export default function Home(){
                 href={main.url}
                 target="_blank"
                 style={{
-                  background:"#0b7a3b",
+                  background:"#0f6d36",
                   color:"white",
                   padding:"10px 15px",
                   borderRadius:5,
                   textDecoration:"none"
                 }}
               >
-                Ler notícia completa
+                Ler notícia
               </a>
 
             </div>
@@ -158,7 +164,7 @@ export default function Home(){
                 key={n.id}
                 style={{
                   border:"1px solid #eee",
-                  borderRadius:8,
+                  borderRadius:6,
                   overflow:"hidden"
                 }}
               >
@@ -171,7 +177,7 @@ export default function Home(){
                 <div style={{padding:15}}>
 
                   <h3 style={{
-                    fontSize:18,
+                    fontSize:17,
                     marginBottom:10
                   }}>
                     {n.title}
@@ -181,7 +187,7 @@ export default function Home(){
                     href={n.url}
                     target="_blank"
                     style={{
-                      color:"#0b7a3b",
+                      color:"#0f6d36",
                       fontWeight:"bold"
                     }}
                   >
@@ -202,8 +208,8 @@ export default function Home(){
 
             <h3 style={{
               marginBottom:20,
-              borderBottom:"2px solid #0b7a3b",
-              paddingBottom:10
+              borderBottom:"2px solid #0f6d36",
+              paddingBottom:8
             }}>
               Últimas notícias
             </h3>
@@ -226,7 +232,7 @@ export default function Home(){
                 <a
                   href={n.url}
                   target="_blank"
-                  style={{color:"#0b7a3b"}}
+                  style={{color:"#0f6d36"}}
                 >
                   Ler
                 </a>
