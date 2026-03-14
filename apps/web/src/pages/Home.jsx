@@ -15,7 +15,7 @@ export default function Home(){
       try{
 
         const res = await fetch(
-          `${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc&limit=20`,
+          `${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc&limit=50`,
           {
             headers:{
               apikey: SUPABASE_KEY,
