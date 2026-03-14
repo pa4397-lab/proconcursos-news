@@ -206,14 +206,9 @@ def fetch_news():
 
             from datetime import datetime
 
+            from datetime import datetime
+
             published = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-
-            if hasattr(entry, "published_parsed"):
-
-                published = time.strftime(
-                    "%Y-%m-%d %H:%M:%S",
-                    entry.published_parsed
-                )
 
             save_news(title, link, feed, published)
 
