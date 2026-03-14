@@ -6,44 +6,25 @@ import os
 from slugify import slugify
 from groq import Groq
 
-
-# =========================
-# VARIÁVEIS DE AMBIENTE
-# =========================
-
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-
-if not SUPABASE_URL or not SUPABASE_KEY or not GROQ_API_KEY:
-    raise Exception("Variáveis de ambiente não encontradas")
 
 TABLE_URL = f"{SUPABASE_URL}/rest/v1/news"
 
 headers = {
     "apikey": SUPABASE_KEY,
     "Authorization": f"Bearer {SUPABASE_KEY}",
-    "Content-Type": "application/json",
-    "Prefer": "return=minimal"
+    "Content-Type": "application/json"
 }
 
 client = Groq(api_key=GROQ_API_KEY)
-
-
-# =========================
-# RSS FEEDS
-# =========================
 
 RSS_FEEDS = [
     "https://www.pciconcursos.com.br/rss",
     "https://g1.globo.com/rss/g1/concursos-e-emprego/",
     "https://rss.uol.com.br/feed/empregos.xml"
 ]
-
-
-# =========================
-# FILTRO DE CONCURSOS
-# =========================
 
 KEYWORDS = [
     "concurso",
@@ -53,43 +34,28 @@ KEYWORDS = [
     "prefeitura",
     "polícia",
     "tribunal",
-    "processo seletivo",
-    "universidade",
-    "if"
+    "processo seletivo"
 ]
 
 
 def is_concurso(title):
 
-    text = title.lower()
+    title = title.lower()
 
-    return any(k in text for k in KEYWORDS)
+    return any(k in title for k in KEYWORDS)
 
 
-# =========================
-# VERIFICAR DUPLICAÇÃO
-# =========================
+def news_exists(slug, link):
 
-def news_exists(slug):
+    url = f"{TABLE_URL}?or=(slug.eq.{slug},url.eq.{link})"
 
-    url = f"{TABLE_URL}?slug=eq.{slug}"
+    r = requests.get(url, headers=headers)
 
-    try:
-
-        r = requests.get(url, headers=headers)
-
-        if r.status_code == 200 and len(r.json()) > 0:
-            return True
-
-    except:
-        pass
+    if r.status_code == 200 and len(r.json()) > 0:
+        return True
 
     return False
 
-
-# =========================
-# EXTRAIR IMAGEM
-# =========================
 
 def get_image_from_page(url):
 
@@ -120,9 +86,24 @@ def get_image_from_page(url):
     return "https://placehold.co/600x400?text=ProConcursos"
 
 
-# =========================
-# EXTRAIR TEXTO DA PÁGINA
-# =========================
+def generate_summary(content):
+
+    try:
+
+        response = client.chat.completions.create(
+            model="llama3-70b-8192",
+            messages=[{
+                "role": "user",
+                "content": f"Resuma esta notícia de concurso público em 2 frases: {content}"
+            }]
+        )
+
+        return response.choices[0].message.content
+
+    except:
+
+        return "Resumo automático"
+
 
 def extract_content(url):
 
@@ -143,116 +124,29 @@ def extract_content(url):
         return ""
 
 
-# =========================
-# REESCREVER NOTÍCIA COM IA
-# =========================
-
-def rewrite_news(content):
-
-    if not content:
-        return ""
-
-    try:
-
-        prompt = f"""
-Você é um jornalista especializado em concursos públicos.
-
-Reescreva a notícia abaixo de forma ORIGINAL.
-
-Regras:
-- texto 100% único
-- 4 parágrafos
-- destaque vagas, salários e órgão
-- linguagem jornalística
-
-Notícia:
-{content}
-"""
-
-        response = client.chat.completions.create(
-
-            model="llama3-70b-8192",
-
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
-
-        )
-
-        return response.choices[0].message.content
-
-    except:
-
-        return content[:500]
-
-
-# =========================
-# GERAR RESUMO
-# =========================
-
-def generate_summary(content):
-
-    if not content:
-        return ""
-
-    try:
-
-        response = client.chat.completions.create(
-
-            model="llama3-70b-8192",
-
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"Resuma esta notícia de concurso em 2 frases: {content}"
-                }
-            ]
-
-        )
-
-        return response.choices[0].message.content
-
-    except:
-
-        return ""
-
-
-# =========================
-# SALVAR NO SUPABASE
-# =========================
-
 def save_news(title, link, source, published):
 
     slug = slugify(title)
 
-    if news_exists(slug):
+    if news_exists(slug, link):
 
-        print("Notícia já existe:", title)
+        print("Duplicada:", title)
 
         return
-
-    print("Processando:", title)
 
     image = get_image_from_page(link)
 
     content = extract_content(link)
 
-    rewritten = rewrite_news(content)
-
-    summary = generate_summary(rewritten)
+    summary = generate_summary(content)
 
     data = {
         "title": title,
         "slug": slug,
         "url": link,
         "source": source,
-        "content": rewritten,
+        "content": content,
         "summary": summary,
-        "analysis": "Análise automática",
-        "probability": 50,
         "image": image,
         "published_at": published
     }
@@ -261,24 +155,40 @@ def save_news(title, link, source, published):
 
         r = requests.post(TABLE_URL, json=data, headers=headers)
 
-        print("SUPABASE STATUS:", r.status_code)
+        print("Salvou:", title)
 
     except Exception as e:
 
-        print("ERRO AO SALVAR:", e)
+        print("Erro:", e)
 
 
-# =========================
-# BUSCAR NOTÍCIAS
-# =========================
+def cleanup_old_news():
+
+    print("Limpando notícias antigas...")
+
+    url = f"{TABLE_URL}?select=id&order=published_at.desc&offset=500"
+
+    r = requests.get(url, headers=headers)
+
+    if r.status_code != 200:
+        return
+
+    old_news = r.json()
+
+    for n in old_news:
+
+        delete_url = f"{TABLE_URL}?id=eq.{n['id']}"
+
+        requests.delete(delete_url, headers=headers)
+
+    print("Limpeza concluída")
+
 
 def fetch_news():
 
     print("Buscando notícias...")
 
     for feed in RSS_FEEDS:
-
-        print("Feed:", feed)
 
         rss = feedparser.parse(feed)
 
@@ -301,10 +211,8 @@ def fetch_news():
 
             save_news(title, link, feed, published)
 
+    cleanup_old_news()
 
-# =========================
-# MAIN
-# =========================
 
 if __name__ == "__main__":
 
