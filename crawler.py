@@ -5,6 +5,11 @@ import time
 import os
 from slugify import slugify
 from groq import Groq
+from datetime import datetime
+
+# ================================
+# CONFIG
+# ================================
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
@@ -15,10 +20,15 @@ TABLE_URL = f"{SUPABASE_URL}/rest/v1/news"
 headers = {
     "apikey": SUPABASE_KEY,
     "Authorization": f"Bearer {SUPABASE_KEY}",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "Prefer": "return=minimal"
 }
 
 client = Groq(api_key=GROQ_API_KEY)
+
+# ================================
+# RSS SOURCES
+# ================================
 
 RSS_FEEDS = [
     "https://www.pciconcursos.com.br/rss",
@@ -29,6 +39,10 @@ RSS_FEEDS = [
     "https://www.direcaoconcursos.com.br/feed/",
     "https://blog.grancursosonline.com.br/feed/"
 ]
+
+# ================================
+# FILTRO
+# ================================
 
 KEYWORDS = [
     "concurso",
@@ -49,6 +63,10 @@ def is_concurso(title):
     return any(k in title for k in KEYWORDS)
 
 
+# ================================
+# VERIFICAR DUPLICADOS
+# ================================
+
 def news_exists(slug, link):
 
     url = f"{TABLE_URL}?or=(slug.eq.{slug},url.eq.{link})"
@@ -60,6 +78,10 @@ def news_exists(slug, link):
 
     return False
 
+
+# ================================
+# EXTRAIR IMAGEM
+# ================================
 
 def get_image_from_page(url):
 
@@ -90,24 +112,9 @@ def get_image_from_page(url):
     return "https://placehold.co/600x400?text=ProConcursos"
 
 
-def generate_summary(content):
-
-    try:
-
-        response = client.chat.completions.create(
-            model="llama3-70b-8192",
-            messages=[{
-                "role": "user",
-                "content": f"Resuma esta notícia de concurso público em 2 frases: {content}"
-            }]
-        )
-
-        return response.choices[0].message.content
-
-    except:
-
-        return "Resumo automático"
-
+# ================================
+# EXTRAIR TEXTO
+# ================================
 
 def extract_content(url):
 
@@ -128,7 +135,37 @@ def extract_content(url):
         return ""
 
 
-def save_news(title, link, source, published):
+# ================================
+# GERAR RESUMO IA
+# ================================
+
+def generate_summary(content):
+
+    if not content:
+        return "Resumo automático"
+
+    try:
+
+        response = client.chat.completions.create(
+            model="llama3-70b-8192",
+            messages=[{
+                "role": "user",
+                "content": f"Resuma esta notícia de concurso público em 2 frases: {content}"
+            }]
+        )
+
+        return response.choices[0].message.content
+
+    except:
+
+        return "Resumo automático"
+
+
+# ================================
+# SALVAR NOTÍCIA
+# ================================
+
+def save_news(title, link, source):
 
     slug = slugify(title)
 
@@ -143,6 +180,8 @@ def save_news(title, link, source, published):
     content = extract_content(link)
 
     summary = generate_summary(content)
+
+    published = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 
     data = {
         "title": title,
@@ -160,13 +199,23 @@ def save_news(title, link, source, published):
         r = requests.post(TABLE_URL, json=data, headers=headers)
 
         print("STATUS:", r.status_code)
-        print("RESPOSTA:", r.text)
-        print("Salvou:", title)
+
+        if r.status_code in [200, 201]:
+
+            print("Salvou:", title)
+
+        else:
+
+            print("Erro:", r.text)
 
     except Exception as e:
 
-        print("Erro:", e)
+        print("Erro ao salvar:", e)
 
+
+# ================================
+# LIMPAR ANTIGAS
+# ================================
 
 def cleanup_old_news():
 
@@ -190,11 +239,17 @@ def cleanup_old_news():
     print("Limpeza concluída")
 
 
+# ================================
+# CRAWLER
+# ================================
+
 def fetch_news():
 
     print("Buscando notícias...")
 
     for feed in RSS_FEEDS:
+
+        print("Feed:", feed)
 
         rss = feedparser.parse(feed)
 
@@ -206,21 +261,14 @@ def fetch_news():
             if not is_concurso(title):
                 continue
 
-            from datetime import datetime
-
-            published = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-
-            if hasattr(entry, "published_parsed"):
-
-                published = time.strftime(
-                    "%Y-%m-%d %H:%M:%S",
-                    entry.published_parsed
-                )
-
-            save_news(title, link, feed, published)
+            save_news(title, link, feed)
 
     cleanup_old_news()
 
+
+# ================================
+# MAIN
+# ================================
 
 if __name__ == "__main__":
 
