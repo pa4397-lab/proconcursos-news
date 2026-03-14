@@ -23,7 +23,11 @@ client = Groq(api_key=GROQ_API_KEY)
 RSS_FEEDS = [
     "https://www.pciconcursos.com.br/rss",
     "https://g1.globo.com/rss/g1/concursos-e-emprego/",
-    "https://rss.uol.com.br/feed/empregos.xml"
+    "https://rss.uol.com.br/feed/empregos.xml",
+    "https://www.estrategiaconcursos.com.br/blog/feed/",
+    "https://folha.qconcursos.com/feed/",
+    "https://www.direcaoconcursos.com.br/feed/",
+    "https://blog.grancursosonline.com.br/feed/"
 ]
 
 KEYWORDS = [
