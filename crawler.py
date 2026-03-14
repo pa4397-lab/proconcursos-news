@@ -69,20 +69,20 @@ def get_image_from_page(url):
 
         soup = BeautifulSoup(r.text, "html.parser")
 
-        meta = soup.find("meta", property="og:image")
+        og = soup.find("meta", property="og:image")
+        if og and og.get("content"):
+            return og["content"]
 
-        if meta:
-            return meta["content"]
-
-        meta = soup.find("meta", attrs={"name": "twitter:image"})
-
-        if meta:
-            return meta["content"]
+        tw = soup.find("meta", attrs={"name": "twitter:image"})
+        if tw and tw.get("content"):
+            return tw["content"]
 
         img = soup.find("img")
-
         if img and img.get("src"):
-            return img["src"]
+            src = img["src"]
+
+            if src.startswith("http"):
+                return src
 
     except:
         pass
@@ -204,7 +204,9 @@ def fetch_news():
             if not is_concurso(title):
                 continue
 
-            published = None
+            from datetime import datetime
+
+            published = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 
             if hasattr(entry, "published_parsed"):
 
