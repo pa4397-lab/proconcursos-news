@@ -159,6 +159,8 @@ def save_news(title, link, source, published):
 
         r = requests.post(TABLE_URL, json=data, headers=headers)
 
+        print("STATUS:", r.status_code)
+        print("RESPOSTA:", r.text)
         print("Salvou:", title)
 
     except Exception as e:
