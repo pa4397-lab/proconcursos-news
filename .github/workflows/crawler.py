@@ -204,7 +204,9 @@ def fetch_news():
             if not is_concurso(title):
                 continue
 
-            published = None
+            from datetime import datetime
+
+            published = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 
             if hasattr(entry, "published_parsed"):
 
