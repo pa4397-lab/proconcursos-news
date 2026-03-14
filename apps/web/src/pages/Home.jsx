@@ -102,7 +102,7 @@ export default function Home(){
           }}>
 
             <img
-              src={main.image || "https://placehold.co/600x400"}
+              src={main.image && main.image.startsWith("http") ? main.image : "https://placehold.co/600x400"}
               style={{width:"100%",borderRadius:6}}
             />
 
