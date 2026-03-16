@@ -145,6 +145,49 @@ export default function Home(){
                 Ler notícia
               </a>
 
+              {/* PROPAGANDA PROCONCURSOS */}
+
+              <div style={{
+                marginTop:25,
+                padding:20,
+                background:"#f8f8f8",
+                borderRadius:8,
+                border:"1px solid #eee"
+              }}>
+
+                <img
+                  src="/proconcursos-logo.png"
+                  style={{width:120,marginBottom:10}}
+                />
+
+                <p style={{fontWeight:"bold"}}>
+                  Vai fazer esse concurso?
+                </p>
+
+                <p>
+                  Estude com Inteligência Artificial no ProConcursos
+                </p>
+
+                <a
+                  href="https://proconcursos.pro"
+                  target="_blank"
+                  style={{
+                    background:"#0f6d36",
+                    color:"white",
+                    padding:"10px 15px",
+                    borderRadius:6,
+                    textDecoration:"none",
+                    display:"inline-block",
+                    marginTop:10
+                  }}
+                >
+
+                  Começar agora
+
+                </a>
+
+              </div>
+
             </div>
 
           </div>
@@ -248,6 +291,38 @@ export default function Home(){
             }}>
               Últimas notícias
             </h3>
+
+            {/* PROPAGANDA SIDEBAR */}
+
+            <div style={{
+              marginBottom:25,
+              padding:20,
+              border:"1px solid #eee",
+              borderRadius:8,
+              textAlign:"center"
+            }}>
+
+              <img
+                src="/proconcursos-logo.png"
+                style={{width:100,marginBottom:10}}
+              />
+
+              <p style={{fontWeight:"bold"}}>
+                Estude para concursos com IA
+              </p>
+
+              <a
+                href="https://proconcursos.pro"
+                target="_blank"
+                style={{
+                  color:"#0f6d36",
+                  fontWeight:"bold"
+                }}
+              >
+                Conhecer plataforma →
+              </a>
+
+            </div>
 
             {sidebar.map(n => (
 
