@@ -30,6 +30,8 @@ const n = data[0]
 
 document.title = n.title
 
+/* SCHEMA GOOGLE NEWS */
+
 const schema = {
 
 "@context":"https://schema.org",
@@ -44,41 +46,50 @@ const schema = {
 
 }
 
-const schemaScript = document.createElement("script")
+const script = document.createElement("script")
 
-schemaScript.type = "application/ld+json"
+script.type="application/ld+json"
 
-schemaScript.text = JSON.stringify(schema)
+script.text=JSON.stringify(schema)
 
-document.head.appendChild(schemaScript)
+document.head.appendChild(script)
+
+/* HTML DA NOTÍCIA */
 
 document.getElementById("app").innerHTML = `
 
-<div class="text-sm text-gray-500 mb-4">
+<div style="font-size:14px;color:#666;margin-bottom:20px">
 
 <a href="/">Home</a> ›
 <span>${n.title}</span>
 
 </div>
 
-<h1 class="text-3xl font-bold mb-6">
+<h1 style="font-size:34px;margin-bottom:25px">
 
 ${n.title}
 
 </h1>
 
-<img src="${n.image}" class="rounded mb-6">
+<img src="${n.image}" style="border-radius:8px;margin-bottom:25px;width:100%">
 
-<p class="text-lg text-gray-700 mb-6">
+<p style="font-size:20px;color:#555;margin-bottom:30px">
 
 ${n.summary}
 
 </p>
 
-<div class="mb-8">
+<div style="margin-bottom:30px">
 
 <a href="https://proconcursos.pro"
-class="bg-green-700 text-white px-4 py-2 rounded">
+style="
+background:#0f6d36;
+color:white;
+padding:12px 18px;
+border-radius:6px;
+text-decoration:none;
+font-weight:bold
+">
 
 Estude para este concurso com IA
 
@@ -86,7 +97,13 @@ Estude para este concurso com IA
 
 </div>
 
-<h3 class="text-xl font-bold mb-4">
+<div style="font-size:18px;line-height:1.6;margin-bottom:40px">
+
+${formatContent(n.content)}
+
+</div>
+
+<h3 style="font-size:24px;margin-bottom:15px">
 
 Notícias relacionadas
 
@@ -96,14 +113,29 @@ Notícias relacionadas
 
 `
 
-loadRelated(n.categoria)
+loadRelated()
 
 }
 
-async function loadRelated(cat){
+/* FORMATA TEXTO */
+
+function formatContent(text){
+
+if(!text) return ""
+
+return text
+.split(". ")
+.map(p => `<p style="margin-bottom:18px">${p}.</p>`)
+.join("")
+
+}
+
+/* NOTÍCIAS RELACIONADAS */
+
+async function loadRelated(){
 
 const res = await fetch(
-`${SUPABASE_URL}/rest/v1/news?categoria=eq.${cat}&limit=5`,
+`${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc&limit=5`,
 {
 headers:{
 apikey: SUPABASE_KEY,
@@ -119,10 +151,10 @@ data.forEach(n=>{
 
 container.innerHTML += `
 
-<div class="mb-3">
+<div style="margin-bottom:12px">
 
 <a href="/noticia.html?slug=${n.slug}"
-class="text-green-700 font-bold">
+style="color:#0f6d36;font-weight:bold">
 
 ${n.title}
 
