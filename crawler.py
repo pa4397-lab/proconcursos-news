@@ -24,63 +24,13 @@ RSS_FEEDS = [
     "https://www.pciconcursos.com.br/rss",
     "https://g1.globo.com/rss/g1/concursos-e-emprego/",
     "https://rss.uol.com.br/feed/empregos.xml",
-    "https://www.estrategiaconcursos.com.br/blog/feed/",
     "https://folha.qconcursos.com/feed/",
     "https://blog.grancursosonline.com.br/feed/"
 ]
 
-ESTADOS = [
-"AC","AL","AP","AM","BA","CE","DF","ES","GO","MA",
-"MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN",
-"RS","RO","RR","SC","SP","SE","TO"
-]
+def news_exists(slug):
 
-def detectar_estado(texto):
-
-    texto = texto.upper()
-
-    for uf in ESTADOS:
-        if uf in texto:
-            return uf
-
-    return None
-
-
-def detectar_categoria(titulo):
-
-    t = titulo.lower()
-
-    if "polícia" in t or "pm" in t or "pf" in t:
-        return "policia"
-
-    if "tribunal" in t or "tj" in t or "trf" in t:
-        return "tribunais"
-
-    if "prefeitura" in t:
-        return "prefeitura"
-
-    if "universidade" in t or "professor" in t:
-        return "educacao"
-
-    if "saúde" in t:
-        return "saude"
-
-    return "concursos"
-
-
-def detectar_orgao(titulo):
-
-    palavras = titulo.split()
-
-    if len(palavras) > 3:
-        return palavras[0] + " " + palavras[1]
-
-    return None
-
-
-def news_exists(slug, link):
-
-    url = f"{TABLE_URL}?or=(slug.eq.{slug},url.eq.{link})"
+    url = f"{TABLE_URL}?slug=eq.{slug}"
 
     r = requests.get(url, headers=headers)
 
@@ -117,11 +67,11 @@ def extract_content(url):
 
         soup = BeautifulSoup(r.text, "html.parser")
 
-        p = soup.find_all("p")
+        paragraphs = soup.find_all("p")
 
-        texto = " ".join(x.get_text() for x in p)
+        text = " ".join(p.get_text() for p in paragraphs)
 
-        return texto[:4000]
+        return text[:4000]
 
     except:
 
@@ -147,11 +97,50 @@ def generate_summary(text):
         return "Resumo automático"
 
 
+def generate_article(title, content):
+
+    prompt = f"""
+
+Crie um artigo completo de SEO sobre concursos públicos.
+
+Título da notícia:
+{title}
+
+Conteúdo base:
+{content}
+
+Estrutura obrigatória:
+
+Introdução
+Sobre o concurso
+Vagas e cargos
+Salários
+Como se preparar
+Conclusão
+
+Escreva em português.
+Texto entre 600 e 900 palavras.
+"""
+
+    try:
+
+        response = client.chat.completions.create(
+            model="llama3-70b-8192",
+            messages=[{"role":"user","content":prompt}]
+        )
+
+        return response.choices[0].message.content
+
+    except:
+
+        return content
+
+
 def save_news(title, link, source, published):
 
     slug = slugify(title)
 
-    if news_exists(slug, link):
+    if news_exists(slug):
         return
 
     image = get_image(link)
@@ -160,11 +149,7 @@ def save_news(title, link, source, published):
 
     summary = generate_summary(content)
 
-    categoria = detectar_categoria(title)
-
-    estado = detectar_estado(title)
-
-    orgao = detectar_orgao(title)
+    article = generate_article(title, content)
 
     data = {
         "title": title,
@@ -173,33 +158,14 @@ def save_news(title, link, source, published):
         "source": source,
         "content": content,
         "summary": summary,
+        "article": article,
         "image": image,
-        "categoria": categoria,
-        "estado": estado,
-        "orgao": orgao,
-        "tipo_concurso": categoria,
         "published_at": published
     }
 
     r = requests.post(TABLE_URL, json=data, headers=headers)
 
     print("Salvou:", title)
-
-
-def cleanup():
-
-    url = f"{TABLE_URL}?select=id&order=published_at.desc&offset=500"
-
-    r = requests.get(url, headers=headers)
-
-    if r.status_code != 200:
-        return
-
-    old = r.json()
-
-    for n in old:
-
-        requests.delete(f"{TABLE_URL}?id=eq.{n['id']}", headers=headers)
 
 
 def fetch_news():
@@ -224,8 +190,7 @@ def fetch_news():
 
             save_news(title, link, feed, published)
 
-    cleanup()
-
 
 if __name__ == "__main__":
+
     fetch_news()
