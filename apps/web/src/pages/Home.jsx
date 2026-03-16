@@ -345,7 +345,7 @@ export default function Home(){
                   target="_blank"
                   style={{color:"#0f6d36"}}
                 >
-                  Ler
+                  Leia Mais...
                 </a>
 
               </div>
