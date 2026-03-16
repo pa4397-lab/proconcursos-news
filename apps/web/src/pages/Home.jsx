@@ -239,7 +239,7 @@ export default function Home(){
                   </h3>
 
                   <a
-                    href={n.url}
+                    href={`/noticia.html?slug=${n.slug}`}
                     target="_blank"
                     style={{
                       color:"#0f6d36",
@@ -344,7 +344,7 @@ export default function Home(){
                 </div>
 
                 <a
-                  href={n.url}
+                  href={`/noticia.html?slug=${n.slug}`}
                   target="_blank"
                   style={{color:"#0f6d36"}}
                 >
