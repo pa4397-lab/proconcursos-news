@@ -112,14 +112,23 @@ def extract_content(url):
 
 def generate_summary(text):
 
+    prompt = f"""
+
+Resuma esta notícia de concurso público.
+
+Ignore completamente qualquer propaganda, assinatura de cursos ou marketing.
+
+Texto:
+{text}
+
+Resumo em no máximo 2 frases.
+"""
+
     try:
 
         response = client.chat.completions.create(
             model="llama3-70b-8192",
-            messages=[{
-                "role": "user",
-                "content": f"Resuma esta notícia de concurso em 2 frases: {text}"
-            }]
+            messages=[{"role":"user","content":prompt}]
         )
 
         return response.choices[0].message.content
