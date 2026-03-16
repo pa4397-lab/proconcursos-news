@@ -5,11 +5,6 @@ import time
 import os
 from slugify import slugify
 from groq import Groq
-from datetime import datetime
-
-# ================================
-# CONFIG
-# ================================
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
@@ -20,15 +15,10 @@ TABLE_URL = f"{SUPABASE_URL}/rest/v1/news"
 headers = {
     "apikey": SUPABASE_KEY,
     "Authorization": f"Bearer {SUPABASE_KEY}",
-    "Content-Type": "application/json",
-    "Prefer": "return=minimal"
+    "Content-Type": "application/json"
 }
 
 client = Groq(api_key=GROQ_API_KEY)
-
-# ================================
-# RSS SOURCES
-# ================================
 
 RSS_FEEDS = [
     "https://www.pciconcursos.com.br/rss",
@@ -36,36 +26,57 @@ RSS_FEEDS = [
     "https://rss.uol.com.br/feed/empregos.xml",
     "https://www.estrategiaconcursos.com.br/blog/feed/",
     "https://folha.qconcursos.com/feed/",
-    "https://www.direcaoconcursos.com.br/feed/",
     "https://blog.grancursosonline.com.br/feed/"
 ]
 
-# ================================
-# FILTRO
-# ================================
-
-KEYWORDS = [
-    "concurso",
-    "edital",
-    "vagas",
-    "inscrição",
-    "prefeitura",
-    "polícia",
-    "tribunal",
-    "processo seletivo"
+ESTADOS = [
+"AC","AL","AP","AM","BA","CE","DF","ES","GO","MA",
+"MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN",
+"RS","RO","RR","SC","SP","SE","TO"
 ]
 
+def detectar_estado(texto):
 
-def is_concurso(title):
+    texto = texto.upper()
 
-    title = title.lower()
+    for uf in ESTADOS:
+        if uf in texto:
+            return uf
 
-    return any(k in title for k in KEYWORDS)
+    return None
 
 
-# ================================
-# VERIFICAR DUPLICADOS
-# ================================
+def detectar_categoria(titulo):
+
+    t = titulo.lower()
+
+    if "polícia" in t or "pm" in t or "pf" in t:
+        return "policia"
+
+    if "tribunal" in t or "tj" in t or "trf" in t:
+        return "tribunais"
+
+    if "prefeitura" in t:
+        return "prefeitura"
+
+    if "universidade" in t or "professor" in t:
+        return "educacao"
+
+    if "saúde" in t:
+        return "saude"
+
+    return "concursos"
+
+
+def detectar_orgao(titulo):
+
+    palavras = titulo.split()
+
+    if len(palavras) > 3:
+        return palavras[0] + " " + palavras[1]
+
+    return None
+
 
 def news_exists(slug, link):
 
@@ -79,11 +90,7 @@ def news_exists(slug, link):
     return False
 
 
-# ================================
-# EXTRAIR IMAGEM
-# ================================
-
-def get_image_from_page(url):
+def get_image(url):
 
     try:
 
@@ -92,29 +99,15 @@ def get_image_from_page(url):
         soup = BeautifulSoup(r.text, "html.parser")
 
         og = soup.find("meta", property="og:image")
-        if og and og.get("content"):
+
+        if og:
             return og["content"]
-
-        tw = soup.find("meta", attrs={"name": "twitter:image"})
-        if tw and tw.get("content"):
-            return tw["content"]
-
-        img = soup.find("img")
-        if img and img.get("src"):
-            src = img["src"]
-
-            if src.startswith("http"):
-                return src
 
     except:
         pass
 
-    return "https://placehold.co/600x400?text=ProConcursos"
+    return "https://placehold.co/600x400"
 
-
-# ================================
-# EXTRAIR TEXTO
-# ================================
 
 def extract_content(url):
 
@@ -124,25 +117,18 @@ def extract_content(url):
 
         soup = BeautifulSoup(r.text, "html.parser")
 
-        paragraphs = soup.find_all("p")
+        p = soup.find_all("p")
 
-        text = " ".join(p.get_text() for p in paragraphs)
+        texto = " ".join(x.get_text() for x in p)
 
-        return text[:5000]
+        return texto[:4000]
 
     except:
 
         return ""
 
 
-# ================================
-# GERAR RESUMO IA
-# ================================
-
-def generate_summary(content):
-
-    if not content:
-        return "Resumo automático"
+def generate_summary(text):
 
     try:
 
@@ -150,7 +136,7 @@ def generate_summary(content):
             model="llama3-70b-8192",
             messages=[{
                 "role": "user",
-                "content": f"Resuma esta notícia de concurso público em 2 frases: {content}"
+                "content": f"Resuma esta notícia de concurso em 2 frases: {text}"
             }]
         )
 
@@ -161,27 +147,24 @@ def generate_summary(content):
         return "Resumo automático"
 
 
-# ================================
-# SALVAR NOTÍCIA
-# ================================
-
-def save_news(title, link, source):
+def save_news(title, link, source, published):
 
     slug = slugify(title)
 
     if news_exists(slug, link):
-
-        print("Duplicada:", title)
-
         return
 
-    image = get_image_from_page(link)
+    image = get_image(link)
 
     content = extract_content(link)
 
     summary = generate_summary(content)
 
-    published = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    categoria = detectar_categoria(title)
+
+    estado = detectar_estado(title)
+
+    orgao = detectar_orgao(title)
 
     data = {
         "title": title,
@@ -191,35 +174,19 @@ def save_news(title, link, source):
         "content": content,
         "summary": summary,
         "image": image,
+        "categoria": categoria,
+        "estado": estado,
+        "orgao": orgao,
+        "tipo_concurso": categoria,
         "published_at": published
     }
 
-    try:
+    r = requests.post(TABLE_URL, json=data, headers=headers)
 
-        r = requests.post(TABLE_URL, json=data, headers=headers)
-
-        print("STATUS:", r.status_code)
-
-        if r.status_code in [200, 201]:
-
-            print("Salvou:", title)
-
-        else:
-
-            print("Erro:", r.text)
-
-    except Exception as e:
-
-        print("Erro ao salvar:", e)
+    print("Salvou:", title)
 
 
-# ================================
-# LIMPAR ANTIGAS
-# ================================
-
-def cleanup_old_news():
-
-    print("Limpando notícias antigas...")
+def cleanup():
 
     url = f"{TABLE_URL}?select=id&order=published_at.desc&offset=500"
 
@@ -228,28 +195,16 @@ def cleanup_old_news():
     if r.status_code != 200:
         return
 
-    old_news = r.json()
+    old = r.json()
 
-    for n in old_news:
+    for n in old:
 
-        delete_url = f"{TABLE_URL}?id=eq.{n['id']}"
+        requests.delete(f"{TABLE_URL}?id=eq.{n['id']}", headers=headers)
 
-        requests.delete(delete_url, headers=headers)
-
-    print("Limpeza concluída")
-
-
-# ================================
-# CRAWLER
-# ================================
 
 def fetch_news():
 
-    print("Buscando notícias...")
-
     for feed in RSS_FEEDS:
-
-        print("Feed:", feed)
 
         rss = feedparser.parse(feed)
 
@@ -258,18 +213,19 @@ def fetch_news():
             title = entry.title
             link = entry.link
 
-            if not is_concurso(title):
-                continue
+            published = time.strftime("%Y-%m-%d %H:%M:%S")
 
-            save_news(title, link, feed)
+            if hasattr(entry, "published_parsed"):
 
-    cleanup_old_news()
+                published = time.strftime(
+                    "%Y-%m-%d %H:%M:%S",
+                    entry.published_parsed
+                )
 
+            save_news(title, link, feed, published)
 
-# ================================
-# MAIN
-# ================================
+    cleanup()
+
 
 if __name__ == "__main__":
-
     fetch_news()
