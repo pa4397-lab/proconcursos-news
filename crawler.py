@@ -69,9 +69,41 @@ def extract_content(url):
 
         paragraphs = soup.find_all("p")
 
-        text = " ".join(p.get_text() for p in paragraphs)
+        text_list = []
 
-        return text[:4000]
+        for p in paragraphs:
+
+            t = p.get_text().strip()
+
+            # remover propagandas comuns
+            if any(x in t.lower() for x in [
+
+                "assinatura",
+                "teste grátis",
+                "gran cursos",
+                "estratégia concursos",
+                "assine",
+                "curso completo",
+                "mentoria",
+                "clique aqui",
+                "saiba mais",
+                "preparação completa",
+                "milhões de questões",
+                "oficina de redação",
+                "evento presencial"
+
+            ]):
+                continue
+
+            # remover textos muito curtos
+            if len(t) < 40:
+                continue
+
+            text_list.append(t)
+
+        text = " ".join(text_list)
+
+        return text[:3500]
 
     except:
 
