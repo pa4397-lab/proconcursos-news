@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 const SUPABASE_URL = "https://svfrmghbnyzkaorpnlqq.supabase.co"
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2ZnJtZ2hibnl6a2FvcnBubHFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxOTYzNDcsImV4cCI6MjA4ODc3MjM0N30.vGSYVkIkPrs3IlI4p9SnNZrguStafFLVFLU7qum9a3Y"
+const SUPABASE_KEY = "SUA_ANON_KEY"
 
 export default function Home(){
 
@@ -58,7 +58,7 @@ export default function Home(){
 
     <div style={{fontFamily:"Arial",background:"#f2f2f2"}}>
 
-      {/* HEADER IGUAL SITE PRINCIPAL */}
+      {/* HEADER */}
 
       <div style={{
         background:"#0f6d36",
@@ -78,12 +78,14 @@ export default function Home(){
         padding:"12px 40px",
         fontSize:14
       }}>
-        <a href="/categoria/concurso">Concursos</a> •
-        <a href="/categoria/edital">Editais</a> •
-        <a href="/categoria/policia">Polícia</a> •
-        <a href="/categoria/tribunal">Tribunais</a> •
-        <a href="/categoria/educacao">Educação</a> •
-        <a href="/categoria/saude">Saúde</a>
+
+        <a href="/categoria.html?cat=concurso">Concursos</a> •
+        <a href="/categoria.html?cat=edital">Editais</a> •
+        <a href="/categoria.html?cat=policia">Polícia</a> •
+        <a href="/categoria.html?cat=tribunal">Tribunais</a> •
+        <a href="/categoria.html?cat=educacao">Educação</a> •
+        <a href="/categoria.html?cat=saude">Saúde</a>
+
       </div>
 
       {/* CONTEÚDO */}
@@ -107,7 +109,9 @@ export default function Home(){
           }}>
 
             <img
-              src={main.image && main.image.startsWith("http") ? main.image : "https://placehold.co/600x400"}
+              src={main.image && main.image.startsWith("http")
+                ? main.image
+                : "https://placehold.co/600x400"}
               style={{width:"100%",borderRadius:6}}
             />
 
@@ -175,7 +179,9 @@ export default function Home(){
               >
 
                 <img
-                  src={n.image || "https://placehold.co/400x250"}
+                  src={n.image && n.image.startsWith("http")
+                    ? n.image
+                    : "https://placehold.co/400x250"}
                   style={{width:"100%"}}
                 />
 
@@ -204,6 +210,30 @@ export default function Home(){
               </div>
 
             ))}
+
+            {/* BOTÃO VER MAIS */}
+
+            <div style={{
+              gridColumn:"span 2",
+              textAlign:"center",
+              marginTop:30
+            }}>
+
+              <a
+                href="/categoria.html?cat=concurso"
+                style={{
+                  background:"#0f6d36",
+                  color:"white",
+                  padding:"12px 20px",
+                  borderRadius:6,
+                  textDecoration:"none",
+                  fontWeight:"bold"
+                }}
+              >
+                Ver todas as notícias
+              </a>
+
+            </div>
 
           </div>
 
