@@ -75,7 +75,7 @@ ${n.title}
 
 <p style="font-size:20px;color:#555;margin-bottom:30px">
 
-${n.summary}
+${n.summary || "Resumo automático"}
 
 </p>
 
