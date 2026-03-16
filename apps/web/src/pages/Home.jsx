@@ -231,9 +231,10 @@ export default function Home(){
                 <div style={{padding:15}}>
 
                   <h3 style={{
-                    fontSize:17,
-                    marginBottom:10
-                  }}>
+                    fontSize:20,
+                    marginBottom:15,
+                    lineHeight:1.4
+                    }}>
                     {n.title}
                   </h3>
 
