@@ -64,10 +64,10 @@ export default function Home(){
         background:"#0f6d36",
         color:"white",
         padding:"18px 40px",
-        fontSize:26,
+        fontSize:28,
         fontWeight:"bold"
       }}>
-        ProConcursos
+        ProConcursos News
       </div>
 
       {/* MENU */}
@@ -75,15 +75,17 @@ export default function Home(){
       <div style={{
         background:"white",
         borderBottom:"1px solid #ddd",
-        padding:"12px 40px",
-        fontSize:14
+        padding:"16px 40px",
+        fontSize:18,
+        display:"flex",
+        gap:25
       }}>
 
-        <a href="/categoria.html?cat=concurso">Concursos</a> •
-        <a href="/categoria.html?cat=edital">Editais</a> •
-        <a href="/categoria.html?cat=policia">Polícia</a> •
-        <a href="/categoria.html?cat=tribunal">Tribunais</a> •
-        <a href="/categoria.html?cat=educacao">Educação</a> •
+        <a href="/categoria.html?cat=concurso">Concursos</a>
+        <a href="/categoria.html?cat=edital">Editais</a>
+        <a href="/categoria.html?cat=policia">Polícia</a>
+        <a href="/categoria.html?cat=tribunal">Tribunais</a>
+        <a href="/categoria.html?cat=educacao">Educação</a>
         <a href="/categoria.html?cat=saude">Saúde</a>
 
       </div>
@@ -118,7 +120,7 @@ export default function Home(){
             <div>
 
               <h1 style={{
-                fontSize:30,
+                fontSize:32,
                 marginBottom:20
               }}>
                 {main.title}
@@ -126,7 +128,8 @@ export default function Home(){
 
               <p style={{
                 color:"#666",
-                marginBottom:20
+                marginBottom:20,
+                fontSize:18
               }}>
                 {main.summary}
               </p>
@@ -137,35 +140,32 @@ export default function Home(){
                 style={{
                   background:"#0f6d36",
                   color:"white",
-                  padding:"10px 15px",
+                  padding:"12px 18px",
                   borderRadius:5,
                   textDecoration:"none"
                 }}
               >
-                Ler notícia
+                Leia mais...
               </a>
 
-              {/* PROPAGANDA PROCONCURSOS */}
+              {/* PROPAGANDA */}
 
               <div style={{
                 marginTop:25,
                 padding:20,
                 background:"#f8f8f8",
                 borderRadius:8,
-                border:"1px solid #eee"
+                border:"1px solid #eee",
+                textAlign:"center"
               }}>
 
                 <img
                   src="/logo.png"
-                  style={{width:120,marginBottom:10}}
+                  style={{width:80,marginBottom:10}}
                 />
 
                 <p style={{fontWeight:"bold"}}>
-                  Vai fazer esse concurso?
-                </p>
-
-                <p>
-                  Estude com Inteligência Artificial no ProConcursos
+                  Estude para concursos com Inteligência Artificial
                 </p>
 
                 <a
@@ -207,7 +207,7 @@ export default function Home(){
           <div style={{
             display:"grid",
             gridTemplateColumns:"1fr 1fr",
-            gap:20
+            gap:25
           }}>
 
             {grid.map(n => (
@@ -234,7 +234,7 @@ export default function Home(){
                     fontSize:20,
                     marginBottom:15,
                     lineHeight:1.4
-                    }}>
+                  }}>
                     {n.title}
                   </h3>
 
@@ -246,7 +246,7 @@ export default function Home(){
                       fontWeight:"bold"
                     }}
                   >
-                    Ler notícia
+                    Leia mais...
                   </a>
 
                 </div>
@@ -293,7 +293,7 @@ export default function Home(){
               Últimas notícias
             </h3>
 
-            {/* PROPAGANDA SIDEBAR */}
+            {/* PROPAGANDA */}
 
             <div style={{
               marginBottom:25,
@@ -305,7 +305,7 @@ export default function Home(){
 
               <img
                 src="/logo.png"
-                style={{width:100,marginBottom:10}}
+                style={{width:70,marginBottom:10}}
               />
 
               <p style={{fontWeight:"bold"}}>
@@ -330,13 +330,16 @@ export default function Home(){
               <div
                 key={n.id}
                 style={{
-                  marginBottom:15,
+                  marginBottom:18,
                   borderBottom:"1px solid #eee",
-                  paddingBottom:10
+                  paddingBottom:12
                 }}
               >
 
-                <div style={{marginBottom:5}}>
+                <div style={{
+                  fontSize:16,
+                  marginBottom:6
+                }}>
                   {n.title}
                 </div>
 
@@ -345,7 +348,7 @@ export default function Home(){
                   target="_blank"
                   style={{color:"#0f6d36"}}
                 >
-                  Leia Mais...
+                  Leia mais...
                 </a>
 
               </div>
@@ -367,7 +370,7 @@ export default function Home(){
         color:"white",
         textAlign:"center"
       }}>
-        © {new Date().getFullYear()} ProConcursos
+        © {new Date().getFullYear()} ProConcursos News
       </div>
 
     </div>
