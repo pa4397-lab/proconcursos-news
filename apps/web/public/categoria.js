@@ -1,9 +1,17 @@
+const urlParams = new URLSearchParams(window.location.search)
+
 const cat = urlParams.get("cat")
 
 const SUPABASE_URL = "https://svfrmghbnyzkaorpnlqq.supabase.co"
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2ZnJtZ2hibnl6a2FvcnBubHFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxOTYzNDcsImV4cCI6MjA4ODc3MjM0N30.vGSYVkIkPrs3IlI4p9SnNZrguStafFLVFLU7qum9a3Y"
 
 async function loadNews(){
+
+const container = document.getElementById("app")
+
+container.innerHTML = "<h1>Carregando notícias...</h1>"
+
+try{
 
 const res = await fetch(
 `${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc&limit=200`,
@@ -16,17 +24,27 @@ Authorization:`Bearer ${SUPABASE_KEY}`
 
 const data = await res.json()
 
-const container = document.getElementById("app")
+if(!data || data.length === 0){
 
-container.innerHTML = `<h1 style="font-size:32px;margin-bottom:30px">Categoria: ${cat}</h1>`
+container.innerHTML = "<h2>Nenhuma notícia encontrada</h2>"
+return
+
+}
 
 const filtered = data.filter(n => {
 
 if(!cat) return true
 
-return n.title.toLowerCase().includes(cat.toLowerCase())
+return (
+n.title &&
+n.title.toLowerCase().includes(cat.toLowerCase())
+)
 
 })
+
+container.innerHTML = `<h1 style="font-size:32px;margin-bottom:30px">
+Categoria: ${cat}
+</h1>`
 
 filtered.forEach(n=>{
 
@@ -34,13 +52,15 @@ container.innerHTML += `
 
 <div style="margin-bottom:40px;border-bottom:1px solid #eee;padding-bottom:20px">
 
-<img src="${n.image}" style="width:100%;border-radius:8px;margin-bottom:10px">
+<img src="${n.image || 'https://placehold.co/600x400'}"
+style="width:100%;border-radius:8px;margin-bottom:10px">
 
 <h2 style="font-size:22px;margin-bottom:10px">${n.title}</h2>
 
-<p style="color:#666;margin-bottom:10px">${n.summary}</p>
+<p style="color:#666;margin-bottom:10px">${n.summary || ""}</p>
 
-<a href="${n.url}" target="_blank" style="color:#0f6d36;font-weight:bold">
+<a href="${n.url}" target="_blank"
+style="color:#0f6d36;font-weight:bold">
 Leia mais...
 </a>
 
@@ -50,5 +70,13 @@ Leia mais...
 
 })
 
+}catch(e){
+
+container.innerHTML = "<h2>Erro ao carregar notícias</h2>"
+console.log(e)
+
 }
+
+}
+
 loadNews()
