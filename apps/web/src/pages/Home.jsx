@@ -78,7 +78,12 @@ export default function Home(){
         padding:"12px 40px",
         fontSize:14
       }}>
-        Concursos • Editais • Polícia • Tribunais • Educação • Saúde
+        <a href="/categoria/concurso">Concursos</a> •
+        <a href="/categoria/edital">Editais</a> •
+        <a href="/categoria/policia">Polícia</a> •
+        <a href="/categoria/tribunal">Tribunais</a> •
+        <a href="/categoria/educacao">Educação</a> •
+        <a href="/categoria/saude">Saúde</a>
       </div>
 
       {/* CONTEÚDO */}
