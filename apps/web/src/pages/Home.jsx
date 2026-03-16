@@ -156,7 +156,7 @@ export default function Home(){
               }}>
 
                 <img
-                  src="/proconcursos-logo.png"
+                  src="/logo.png"
                   style={{width:120,marginBottom:10}}
                 />
 
@@ -304,7 +304,7 @@ export default function Home(){
             }}>
 
               <img
-                src="/proconcursos-logo.png"
+                src="/logo.png"
                 style={{width:100,marginBottom:10}}
               />
 
