@@ -99,7 +99,7 @@ Estude para este concurso com IA
 
 <div style="font-size:18px;line-height:1.6;margin-bottom:40px">
 
-${formatContent(n.content)}
+${formatContent(n.article)}
 
 </div>
 
