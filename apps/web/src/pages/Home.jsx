@@ -6,14 +6,13 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 export default function Home(){
 
   const [news,setNews] = useState([])
-  const [loading,setLoading] = useState(true)
 
   useEffect(()=>{
 
     async function loadNews(){
 
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc&limit=50`,
+        `${SUPABASE_URL}/rest/v1/news?select=*&order=published_at.desc&limit=30`,
         {
           headers:{
             apikey: SUPABASE_KEY,
@@ -24,9 +23,7 @@ export default function Home(){
 
       const data = await res.json()
 
-      setNews(data || [])
-
-      setLoading(false)
+      setNews(data)
 
     }
 
@@ -34,197 +31,260 @@ export default function Home(){
 
   },[])
 
-  if(loading){
-    return <div style={{padding:40}}>Carregando...</div>
-  }
-
   if(!news.length){
-    return <div style={{padding:40}}>Nenhuma notícia encontrada</div>
+
+    return <div style={{padding:40}}>Carregando notícias...</div>
+
   }
 
-  const main = news[0]
+  const hero = news[0]
   const grid = news.slice(1,9)
   const sidebar = news.slice(9,20)
 
   return(
 
-    <div style={{fontFamily:"Arial",background:"#f2f2f2"}}>
+<div style={{fontFamily:"Arial",background:"#f3f4f6"}}>
 
-      {/* HEADER */}
+{/* HEADER */}
 
-      <div style={{
-        background:"#0f6d36",
-        color:"white",
-        padding:"16px",
-        fontSize:"22px",
-        fontWeight:"bold",
-        textAlign:"center"
-      }}>
-        ProConcursos News
-      </div>
+<header style={{
+background:"#0f6d36",
+color:"white",
+padding:"16px 20px",
+display:"flex",
+justifyContent:"space-between",
+alignItems:"center"
+}}>
 
-      {/* MENU */}
+<div style={{fontSize:22,fontWeight:"bold"}}>
+ProConcursos News
+</div>
 
-      <div style={{
-        background:"white",
-        borderBottom:"1px solid #ddd",
-        padding:"10px",
-        fontSize:"14px",
-        display:"flex",
-        flexWrap:"wrap",
-        justifyContent:"center",
-        gap:"12px"
-      }}>
+<nav style={{display:"flex",gap:20,fontSize:14}}>
 
-        <a href="/categoria.html?cat=concurso">Concursos</a>
-        <a href="/categoria.html?cat=edital">Editais</a>
-        <a href="/categoria.html?cat=policia">Polícia</a>
-        <a href="/categoria.html?cat=tribunal">Tribunais</a>
-        <a href="/categoria.html?cat=educacao">Educação</a>
-        <a href="/categoria.html?cat=saude">Saúde</a>
+<a href="/">Home</a>
+<a href="/categoria.html?cat=concurso">Concursos</a>
+<a href="/categoria.html?cat=policia">Polícia</a>
+<a href="/categoria.html?cat=tribunal">Tribunais</a>
+<a href="/categoria.html?cat=educacao">Educação</a>
 
-      </div>
+</nav>
 
-      {/* CONTEÚDO */}
+</header>
 
-      <div style={{
-        maxWidth:1200,
-        margin:"20px auto",
-        padding:"15px"
-      }}>
+{/* CONTEÚDO */}
 
-        {/* NOTÍCIA PRINCIPAL */}
+<div style={{
+maxWidth:1200,
+margin:"30px auto",
+padding:"0 15px"
+}}>
 
-        <div style={{
-          display:"flex",
-          flexDirection:"column",
-          gap:"15px",
-          marginBottom:"30px",
-          background:"white",
-          padding:"15px",
-          borderRadius:"8px"
-        }}>
+{/* HERO */}
 
-          <img
-            src={main.image || "https://placehold.co/600x400"}
-            style={{width:"100%",borderRadius:"6px"}}
-          />
+<div style={{
+display:"grid",
+gridTemplateColumns:"2fr 1fr",
+gap:20,
+marginBottom:30
+}}>
 
-          <h1 style={{
-            fontSize:"22px",
-            lineHeight:"1.3"
-          }}>
-            {main.title}
-          </h1>
+<div style={{
+background:"white",
+borderRadius:10,
+overflow:"hidden",
+boxShadow:"0 4px 10px rgba(0,0,0,0.08)"
+}}>
 
-          <p style={{color:"#666"}}>
-            {main.summary}
-          </p>
+<img
+src={hero.image || "https://placehold.co/800x400"}
+style={{width:"100%"}}
+/>
 
-          <a
-            href={`/noticia.html?slug=${main.slug}`}
-            style={{
-              color:"#0f6d36",
-              fontWeight:"bold"
-            }}
-          >
-            Leia mais...
-          </a>
+<div style={{padding:20}}>
 
-        </div>
+<h1 style={{
+fontSize:26,
+marginBottom:15,
+lineHeight:1.3
+}}>
+{hero.title}
+</h1>
 
-        {/* GRID */}
+<p style={{
+color:"#555",
+marginBottom:15
+}}>
+{hero.summary}
+</p>
 
-        <div style={{
-          display:"grid",
-          gridTemplateColumns:"1fr",
-          gap:"20px"
-        }}>
+<a
+href={`/noticia.html?slug=${hero.slug}`}
+style={{
+color:"#0f6d36",
+fontWeight:"bold"
+}}
+>
 
-          {grid.map(n => (
+Leia mais...
 
-            <div
-              key={n.id}
-              style={{
-                background:"white",
-                borderRadius:"8px",
-                overflow:"hidden",
-                boxShadow:"0 2px 6px rgba(0,0,0,0.08)"
-              }}
-            >
+</a>
 
-              <img
-                src={n.image || "https://placehold.co/400x250"}
-                style={{width:"100%"}}
-              />
+</div>
 
-              <div style={{padding:"15px"}}>
+</div>
 
-                <h3 style={{
-                  fontSize:"18px",
-                  marginBottom:"10px"
-                }}>
-                  {n.title}
-                </h3>
+{/* SIDEBAR */}
 
-                <a
-                  href={`/noticia.html?slug=${n.slug}`}
-                  style={{
-                    color:"#0f6d36",
-                    fontWeight:"bold"
-                  }}
-                >
-                  Leia mais...
-                </a>
+<div style={{
+background:"white",
+borderRadius:10,
+padding:20,
+boxShadow:"0 4px 10px rgba(0,0,0,0.08)"
+}}>
 
-              </div>
+<h3 style={{
+marginBottom:15,
+borderBottom:"2px solid #0f6d36",
+paddingBottom:6
+}}>
+Últimas notícias
+</h3>
 
-            </div>
+{sidebar.map(n=>(
 
-          ))}
+<div key={n.id} style={{marginBottom:15}}>
 
-        </div>
+<a
+href={`/noticia.html?slug=${n.slug}`}
+style={{
+fontSize:15,
+color:"#0f6d36",
+fontWeight:"bold"
+}}
+>
 
-        {/* BOTÃO */}
+{n.title}
 
-        <div style={{
-          textAlign:"center",
-          marginTop:"30px"
-        }}>
+</a>
 
-          <a
-            href="/categoria.html?cat=concurso"
-            style={{
-              background:"#0f6d36",
-              color:"white",
-              padding:"12px 18px",
-              borderRadius:"6px",
-              textDecoration:"none",
-              fontWeight:"bold"
-            }}
-          >
-            Ver todas as notícias
-          </a>
+</div>
 
-        </div>
+))}
 
-      </div>
+{/* BANNER */}
 
-      {/* FOOTER */}
+<div style={{
+marginTop:25,
+padding:15,
+background:"#f8f8f8",
+borderRadius:8,
+textAlign:"center"
+}}>
 
-      <div style={{
-        marginTop:"30px",
-        padding:"20px",
-        background:"#111",
-        color:"white",
-        textAlign:"center",
-        fontSize:"14px"
-      }}>
-        © {new Date().getFullYear()} ProConcursos News
-      </div>
+<img src="/logo.png" style={{width:60}}/>
 
-    </div>
+<p style={{margin:"10px 0"}}>
 
-  )
+Estude para concursos com IA
+
+</p>
+
+<a
+href="https://proconcursos.pro"
+style={{
+background:"#0f6d36",
+color:"white",
+padding:"8px 12px",
+borderRadius:5,
+textDecoration:"none"
+}}
+>
+
+Começar agora
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{/* GRID DE NOTÍCIAS */}
+
+<div style={{
+display:"grid",
+gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",
+gap:20
+}}>
+
+{grid.map(n=>(
+
+<div
+key={n.id}
+style={{
+background:"white",
+borderRadius:10,
+overflow:"hidden",
+boxShadow:"0 4px 10px rgba(0,0,0,0.08)",
+transition:"0.2s"
+}}
+>
+
+<img
+src={n.image || "https://placehold.co/400x250"}
+style={{width:"100%"}}
+/>
+
+<div style={{padding:15}}>
+
+<h3 style={{
+fontSize:18,
+marginBottom:10,
+lineHeight:1.4
+}}>
+{n.title}
+</h3>
+
+<a
+href={`/noticia.html?slug=${n.slug}`}
+style={{
+color:"#0f6d36",
+fontWeight:"bold"
+}}
+>
+
+Leia mais...
+
+</a>
+
+</div>
+
+</div>
+
+))}
+
+</div>
+
+</div>
+
+{/* FOOTER */}
+
+<footer style={{
+marginTop:40,
+background:"#111",
+color:"white",
+textAlign:"center",
+padding:25
+}}>
+
+© {new Date().getFullYear()} ProConcursos News
+
+</footer>
+
+</div>
+
+)
 
 }
