@@ -221,15 +221,29 @@ gap:20
 
 {grid.map(n=>(
 
-<div
+<a
 key={n.id}
+href={`/noticia.html?slug=${n.slug}`}
 style={{
 background:"white",
 borderRadius:10,
 overflow:"hidden",
 boxShadow:"0 4px 10px rgba(0,0,0,0.08)",
-transition:"0.2s"
+transition:"all 0.2s ease",
+textDecoration:"none",
+color:"inherit"
 }}
+
+onMouseEnter={e=>{
+e.currentTarget.style.transform="translateY(-6px)"
+e.currentTarget.style.boxShadow="0 10px 20px rgba(0,0,0,0.15)"
+}}
+
+onMouseLeave={e=>{
+e.currentTarget.style.transform="translateY(0)"
+e.currentTarget.style.boxShadow="0 4px 10px rgba(0,0,0,0.08)"
+}}
+
 >
 
 <img
@@ -247,25 +261,20 @@ lineHeight:1.4
 {n.title}
 </h3>
 
-<a
-href={`/noticia.html?slug=${n.slug}`}
-style={{
+<div style={{
 color:"#0f6d36",
 fontWeight:"bold"
-}}
->
+}}>
 
-Leia mais...
+Leia mais →
+
+</div>
+
+</div>
 
 </a>
 
-</div>
-
-</div>
-
 ))}
-
-</div>
 
 </div>
 
