@@ -121,8 +121,13 @@ marginBottom:15
 <a
 href={`/noticia.html?slug=${hero.slug}`}
 style={{
-color:"#0f6d36",
-fontWeight:"bold"
+display:"block",
+background:"white",
+borderRadius:10,
+overflow:"hidden",
+boxShadow:"0 4px 10px rgba(0,0,0,0.08)",
+textDecoration:"none",
+color:"inherit"
 }}
 >
 
